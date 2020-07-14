@@ -26,6 +26,7 @@ pipeline {
         CREATE_LATEST_TAG = "${env.BRANCH_NAME == 'master' ? '1' : '0'}"
         DOCKER_CREDS = credentials('ocir-pull-and-push-account')
         NETRC_FILE = credentials('netrc')
+        COPYRIGHT_SCAN_ROOT = "${env.BRANCH_NAME == 'master' ? ${WORKSPACE}/verrazzano : ${WORKSPACE}}"
     }
 
     stages {
@@ -43,7 +44,7 @@ pipeline {
         stage('Copyright Compliance Check') {
             when { not { buildingTag() } }
             steps {
-                copyrightScan "${WORKSPACE}"
+                copyrightScan "${COPYRIGHT_SCAN_ROOT}"
             }
         }
        
