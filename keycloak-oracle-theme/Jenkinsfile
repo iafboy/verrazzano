@@ -26,7 +26,7 @@ pipeline {
         CREATE_LATEST_TAG = "${env.BRANCH_NAME == 'master' ? '1' : '0'}"
         DOCKER_CREDS = credentials('ocir-pull-and-push-account')
         NETRC_FILE = credentials('netrc')
-        COPYRIGHT_SCAN_ROOT = "${env.BRANCH_NAME == 'master' ? ${WORKSPACE}/verrazzano : ${WORKSPACE}}"
+        COPYRIGHT_SCAN_ROOT = "${WORKSPACE}"
     }
 
     stages {
