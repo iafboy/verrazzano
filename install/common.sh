@@ -44,6 +44,28 @@ function wait_for_ingress_ip() {
   fi
 }
 
+function wait_for_ingress_ip_in_svc() {
+  local retries=0
+  local ingress_name=$1
+  local namespace=$2
+  local ingress_ip
+
+  log "Waiting for ingress $ingress_name in namespace $namespace to have an IP"
+  until [ "$retries" -ge 10 ]
+  do
+      ingress_ip=$(kubectl get svc -n $namespace $ingress_name -o yaml | grep -e "- ip: \d")
+      if ! [ -z "$ingress_ip" ] ; then
+          break;
+      fi
+      retries=$(($retries+1))
+      sleep 5
+  done
+  if [ "$retries" -ge 10 ] ; then
+    log "An error occurred - ingress $ingress_name in namespace $namespace did not have an IP address"
+    exit 1
+  fi
+}
+
 function get_rancher_access_token {
   local rancher_hostname=$1
   local rancher_password=$2

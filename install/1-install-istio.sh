@@ -137,6 +137,8 @@ function install_istio()
     log "Change to use the OLCNE image for kubectl then install istio proper"
     sed "s|/kubectl:|/istio_kubectl:|g" ${TMP_DIR}/istio.yaml | kubectl apply -f - || return $?
 
+    # Make sure istio ingress has an IP
+    wait_for_ingress_ip_in_svc istio-ingressgateway istio-system
 }
 
 function update_coredns()

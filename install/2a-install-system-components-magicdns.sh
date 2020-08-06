@@ -71,6 +71,9 @@ function install_nginx_ingress_controller()
       kubectl patch service -n ingress-nginx ingress-controller-nginx-ingress-controller -p '{ "spec": { "ports": [{ "port": 80, "nodePort": 30080 }, { "port": 443, "nodePort": 30443 }, { "name": "healthz", "nodePort": 30254, "port": 30254, "protocol": "TCP", "targetPort": 10254 } ]  }}'
     fi
 
+  # Make sure nxinx ingress has an IP
+    wait_for_ingress_ip_in_svc ingress-controller-nginx-ingress-controller ingress-nginx
+
     set_INGRESS_IP
 
     if [ $DNS_TYPE = "xip.io" ]; then
