@@ -50,10 +50,11 @@ function wait_for_ingress_ip_in_svc() {
   local namespace=$2
   local ingress_ip
 
-  log "Waiting for ingress $ingress_name in namespace $namespace to have an IP"
+  action "Waiting for ingress $ingress_name in namespace $namespace to have an IP"
   until [ "$retries" -ge 10 ]
   do
       ingress_ip=$(kubectl get svc -n $namespace $ingress_name -o yaml | grep -e "- ip: \d")
+      action ingress_ip
       if ! [ -z "$ingress_ip" ] ; then
           break;
       fi
@@ -61,7 +62,7 @@ function wait_for_ingress_ip_in_svc() {
       sleep 5
   done
   if [ "$retries" -ge 10 ] ; then
-    log "An error occurred - ingress $ingress_name in namespace $namespace did not have an IP address"
+    action "An error occurred - ingress $ingress_name in namespace $namespace did not have an IP address"
     exit 1
   fi
 }
