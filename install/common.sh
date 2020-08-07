@@ -53,7 +53,7 @@ function wait_for_ingress_ip_in_svc() {
   log "Waiting for ingress $ingress_name in namespace $namespace to have an IP"
   until [ "$retries" -ge 30 ]
   do
-      ingress_ip=$(kubectl get svc -n $namespace $ingress_name -o yaml | grep -e "- ip: \d")
+      ingress_ip=$(kubectl get svc -n $namespace $ingress_name -o json | jq -r '.status.loadBalancer.ingress[].ip')
       if ! [ -z "$ingress_ip" ] ; then
           break;
       fi
