@@ -88,6 +88,9 @@ function install_nginx_ingress_controller()
       --set controller.service.annotations.'external-dns\.alpha\.kubernetes\.io/hostname'=${DNS_PREFIX}.${NAME}.${OCI_DNS_ZONE_NAME} \
       --timeout 15m0s \
       --wait
+
+        # Make sure nxinx ingress has an IP
+    wait_for_ingress_ip_in_svc ingress-controller-nginx-ingress-controller ingress-nginx
 }
 
 function install_cert_manager()
